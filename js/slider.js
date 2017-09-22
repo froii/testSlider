@@ -3,9 +3,7 @@
  */
 'use strict';
 class SliderObj {
-    constructor(timerTrue) {
-        this.timerTrue = timerTrue;
-
+    constructor() {
     }
 
     variable() {
@@ -19,9 +17,6 @@ class SliderObj {
         this.opacityCircle = $(".opacity__circle");
         this.opacityBlock = $(".opacity__block");
         this.sliderContainerOpacity = $(".slider__container--opacity");
-
-        this.slideTime = 4000;
-
     }
 
     loaderSlider() {
@@ -48,7 +43,7 @@ class SliderObj {
     }
 
 
-    changeSlider(sign) {
+    changeSlider( sign) {
         this.sliderSliderWidth = this.sliderSlider.width();
         this.numberOfSlide = parseInt(this.sliderContainer.attr("data-currentSlider"));
 
@@ -70,7 +65,7 @@ class SliderObj {
         this.slideNext.on("click", (e) => {
             e.preventDefault();
             let sign = +1;
-            this.changeSlider(sign);
+            this.changeSlider( sign);
         })
     }
 
@@ -79,7 +74,7 @@ class SliderObj {
         this.slidePrev.on("click", (e) => {
             e.preventDefault();
             let sign = -1;
-            this.changeSlider(sign);
+            this.changeSlider( sign);
         })
     }
 
@@ -116,15 +111,6 @@ class SliderObj {
         });
     }
 
-    timerTimeOut() {
-        this.slideTimer = setInterval(this.changeSlider(+1), this.slideTime);
-        this.sliderSlider.on("hover", () => {
-                clearInterval(this.slideTimer);
-            }, () => {
-                this.slideTimer = setInterval(this.changeSlider(+1), this.slideTime);
-            }
-        )
-    }
 
     init() {
         this.variable();
@@ -134,10 +120,6 @@ class SliderObj {
         this.lenghtOfAddedImages();
         this.nextSlider();
         this.prevSlider();
-
-        if (this.timerTrue) {
-            this.timerTimeOut();
-        }
     }
 }
 /*
@@ -146,28 +128,49 @@ class SliderObj {
 // f.paginationSlider();
 
 
-$(function () {
-        let f = new SliderObj(true);
-        f.init()
-});
 
-//
-// $(function () {
-//     let promise = new Promise((resolve, reject) => {
-//         let f = new SliderObj();
-//         resolve(f.init())
-//     });
-//     promise
-//         .then(
-//             result => {
-//                 let fe = new SlidInterval();
-//                 fe.timerTimeOut();
-//             },
-//             error => {
-//                 alert("bad: " + error.message)
-//             }
-//         );
-// });
+
+class SlidInterval extends SliderObj {
+    constructor() {
+        super();
+        this.variable();
+        this.slideTime = 4000;
+        this.slideTimer = setInterval(this.changeSlider(+1), this.slideTime);
+    }
+
+    timerTimeOut() {
+
+        this.sliderSlider.on("hover", () => {
+                clearInterval(this.slideTimer);
+            }, () => {
+                this.slideTimer = setInterval(this.changeSlider(+1), this.slideTime);
+            }
+        )
+    }
+
+
+}
+/*
+ instanceof
+ .constructor*/
+
+
+$(function () {
+    let promise = new Promise((resolve, reject) => {
+        let f = new SliderObj();
+        resolve(  f.init() )
+    });
+    promise
+        .then(
+            result => {
+                let fe = new SlidInterval();
+                fe.timerTimeOut();
+            },
+            error => {
+                alert("bad: " + error.message)
+            }
+        );
+});
 
 
 
