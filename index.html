@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Slider</title>
+    <link rel="stylesheet" href="CSS/reset.css">
+    <link rel="stylesheet" href="CSS/slider.css">
+    <script src="js/jquery-1.11.3.js"></script>
+    <script src="js/slider.js"></script>
+</head>
+<body>
+<div id="slider">
+    <div id="slider__containerBlock">
+        <div id="slider__container" data-currentSlider="0">
+            <div class="slider__slider">
+                <div class="slider__container--opacity"></div>
+                <span> FIRST SLIDER </span>
+            </div>
+            <div class="slider__slider">
+                <span> SECOND SLIDER </span>
+
+            </div>
+            <div class="slider__slider">
+                <span> THIRD SLIDER </span>
+
+            </div>
+            <div class="slider__slider">
+                <span> FOURTH SLIDER </span>
+
+            </div>
+            <div class="slider__slider">
+                <span> FIFTH SLIDER </span>
+
+            </div>
+        </div>
+    </div>
+    <div id="slider__button">
+        <div id="slider__prev">
+            <span> <- </span>
+        </div>
+        <div id="slider__next">
+            <span> -> </span>
+        </div>
+    </div>
+    <div id="slider__pagination">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div id="slider__opacity">
+        <div class="opacity__block">
+	            <span class="opacity__circle">
+
+
+	            </span>
+        </div>
+    </div>
+    <div class="slider__inputFile">
+        <form id="slider__inputFile--form"></form>
+        <label for="file">
+            <input type="file" id="file" name="img" accept=".jpeg, .png, .jpg" multiple>
+        </label>
+        <input id="slider__submitImages" type="submit" value=" submit image">
+    </div>
+</div>
+</body>
+</html>
