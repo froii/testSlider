@@ -4,6 +4,7 @@
 'use strict';
 class SliderObj {
     constructor() {
+
     }
 
     variable() {
@@ -17,11 +18,13 @@ class SliderObj {
         this.opacityCircle = $(".opacity__circle");
         this.opacityBlock = $(".opacity__block");
         this.sliderContainerOpacity = $(".slider__container--opacity");
+
     }
 
     loaderSlider() {
-        this.sliderContainer.css("width", 100 * (this.sliderSliderLength) + "%");
-        this.sliderSlider.css("width", 100 / ( this.sliderSliderLength ) + "%");
+        this.sliderContainer.css("width", 100 * (this.sliderSliderLength + 1) + "%");
+        this.sliderSlider.css("width", 100 / ( this.sliderSliderLength + 1 ) + "%");
+        this.sliderWidth = this.sliderSlider.width();
     }
 
     lenghtOfAddedImages() {
@@ -43,8 +46,7 @@ class SliderObj {
     }
 
 
-    changeSlider( sign) {
-        this.sliderSliderWidth = this.sliderSlider.width();
+    changeSlider(sign) {
         this.numberOfSlide = parseInt(this.sliderContainer.attr("data-currentSlider"));
 
         // function nextSlide() {
@@ -52,12 +54,24 @@ class SliderObj {
         // }
 
         if (this.numberOfSlide === this.sliderSliderLength - 1) {
-            this.firstSlide();
+            let lastSlide = this.sliderSlider.first().clone();
+            lastSlide.appendTo(this.sliderContainer);
+
+            this.sliderContainer.animate({left: "-" + ( this.sliderWidth) * (this.numberOfSlide + 1 )}, this.timeToChangeSlider);
+
+
+                setTimeout(() => {
+                    this.sliderContainer.animate({left: 0}, 0).attr("data-currentSlider", 0);
+                    lastSlide.remove();
+                }, this.timeToChangeSlider);
+
+
         } else if (this.numberOfSlide < this.sliderSliderLength) {
             this.numberOfSlide = Number(this.numberOfSlide + sign);
+            this.sliderContainer.animate({left: "-" + ( this.sliderWidth) * (this.numberOfSlide )}, this.timeToChangeSlider).attr("data-currentSlider", this.numberOfSlide);
+
         }
 
-        this.sliderContainer.animate({left: "-" + (this.sliderSliderWidth) * (this.numberOfSlide )}, 300).attr("data-currentSlider", this.numberOfSlide);
     }
 
 
@@ -65,7 +79,7 @@ class SliderObj {
         this.slideNext.on("click", (e) => {
             e.preventDefault();
             let sign = +1;
-            this.changeSlider( sign);
+            this.changeSlider(sign);
         })
     }
 
@@ -74,14 +88,14 @@ class SliderObj {
         this.slidePrev.on("click", (e) => {
             e.preventDefault();
             let sign = -1;
-            this.changeSlider( sign);
+            this.changeSlider(sign);
         })
     }
 
 
     firstSlide() {
 
-        this.numberOfSlide = 0;
+
     }
 
     paginationSlider() {
@@ -111,15 +125,35 @@ class SliderObj {
         });
     }
 
+    timerTimeOut() {
+        this.slideTimer = setInterval(() => this.changeSlider(+1), this.slideTime);
+        this.mainContainer.hover(() => {
+                clearInterval(this.slideTimer);
+            },
+            () => {
+                this.slideTimer = setInterval(() => this.changeSlider(+1), this.slideTime);
+            }
+        )
+    }
 
-    init() {
+    init(ParamOfSliderObj) {
         this.variable();
+        ({
+            mainContainer: this.mainContainer = $("body"),
+            timeToChangeSlider: this.timeToChangeSlider = 0,
+            timer: this.timerTrue = false,
+            speedOfTimer: this.slideTime = 6000
+        } = ParamOfSliderObj);
 
         this.loaderSlider();
         this.opacitySlider();
         this.lenghtOfAddedImages();
         this.nextSlider();
         this.prevSlider();
+
+        if (this.timerTrue) {
+            this.timerTimeOut();
+        }
     }
 }
 /*
@@ -128,45 +162,21 @@ class SliderObj {
 // f.paginationSlider();
 
 
-
-
-class SlidInterval extends SliderObj {
-    constructor() {
-        super();
-        this.variable();
-        this.slideTime = 1000;
-        this.slideTimer = setInterval(() => this.changeSlider(+1), this.slideTime);
-    }
-
-    timerTimeOut() {
-
-        this.sliderSlider.on("hover", () => {
-                clearInterval(this.slideTimer);
-            }, () => {
-                this.slideTimer = setInterval(() => this.changeSlider(+1), this.slideTime);
-            }
-        )
-    }
-
-
-}
-/*
- instanceof
- .constructor*/
-
 $(function () {
-
-        let f = new SliderObj();
-        f.init();
- let fe = new SlidInterval();
-fe.timerTimeOut();
-
+    let f = new SliderObj();
+    f.init({
+        mainContainer: $("#slider"),
+        timeToChangeSlider: 1000,
+        timer: false,
+        speedOfTimer: 40000
+    })
 });
 
+//
 // $(function () {
 //     let promise = new Promise((resolve, reject) => {
 //         let f = new SliderObj();
-//         resolve(  f.init() )
+//         resolve(f.init())
 //     });
 //     promise
 //         .then(
@@ -179,9 +189,11 @@ fe.timerTimeOut();
 //             }
 //         );
 // });
-//
-//
-//
+
+
+
+
+
 
 
 
