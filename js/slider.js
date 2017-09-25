@@ -60,13 +60,14 @@ class SliderObj {
 
 
     changeSlider(sign) {
+        this.sliderContainer.stop();
         this.numberOfSlide = parseInt(this.sliderContainer.attr("data-currentSlider"));
         this.sliderWidth = Math.ceil(this.sliderSlider.width());
 
         if (this.numberOfSlide < 0) {
-
+            this.animationOfFirstSlide(0)
         } else if (this.numberOfSlide === this.sliderSliderLength - 1) {
-            this.animationOfLateralSlide();
+            this.animationOfLastSlide(0);
 
         } else if (this.numberOfSlide < this.sliderSliderLength) {
             this.numberOfSlide = Number(this.numberOfSlide + sign);
@@ -90,18 +91,31 @@ class SliderObj {
         })
     }
 
-    animationOfLateralSlide() {
+    animationOfLastSlide(numberOfSlide) {
+        let promise = new Promise((resolve, reject) => {
+            const lastSlide = this.sliderSlider.first().clone();
+            this.sliderContainer.append(lastSlide).animate({left: "-" + ( this.sliderWidth) * (this.numberOfSlide + 1 )}, this.timeToChangeSlider);
+            resolve(lastSlide);
+        });
+        promise.then(
+            (lastSlide) => {
+                this.sliderContainer.animate({left: 0}, 0).attr("data-currentSlider", this.numberOfSlide = numberOfSlide);
+                 setTimeout(() => {  lastSlide.remove() },  this.timeToChangeSlider );
+            }, () => {
+            }
+        );
+    }
 
+    animationOfFirstSlide(numberOfSlide) {
         let promise = new Promise((resolve, reject) => {
             var lastSlide = this.sliderSlider.first().clone();
-            $(".i").append(lastSlide);
             this.sliderContainer.append(this.sliderSlider.first().clone());
             this.sliderContainer.animate({left: "-" + ( this.sliderWidth) * (this.numberOfSlide + 1 )}, this.timeToChangeSlider);
             resolve(lastSlide);
         });
         promise.then(
             (lastSlide) => {
-                this.sliderContainer.animate({left: 0}, 1).attr("data-currentSlider", this.numberOfSlide = 0);
+                this.sliderContainer.animate({left: 0}, 1).attr("data-currentSlider", this.numberOfSlide = numberOfSlide);
                 lastSlide.remove();
             }, () => {
             }
