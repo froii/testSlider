@@ -22,7 +22,7 @@ class SliderObj {
     }
 
     lengthOfAddedImages() {
-        let fileImage = $("#file");
+        const fileImage = $("#file");
         fileImage.on("change", () => {
             let fileImagesLength = fileImage.get(0).files.length;
             let submitImages = $("#slider__submitImages");
@@ -59,67 +59,54 @@ class SliderObj {
     }
 
 
-    changeSlider(sign) {
-        this.sliderContainer.stop();
+    changeSlider(sign, route) {
+        this.sliderContainer.stop(false, true);
         this.numberOfSlide = parseInt(this.sliderContainer.attr("data-currentSlider"));
         this.sliderWidth = Math.ceil(this.sliderSlider.width());
 
-        if (this.numberOfSlide < 0) {
-            this.animationOfFirstSlide(0)
-        } else if (this.numberOfSlide === this.sliderSliderLength - 1) {
+        if (this.numberOfSlide <= 0 && route === "prev") {
+            this.animationOfFirstSlide(this.sliderSliderLength - 1)
+        } else if (this.numberOfSlide === this.sliderSliderLength - 1 && route === "next") {
             this.animationOfLastSlide(0);
-
         } else if (this.numberOfSlide < this.sliderSliderLength) {
             this.numberOfSlide = Number(this.numberOfSlide + sign);
-            this.sliderContainer.animate({left: "-" + ( this.sliderWidth) * (this.numberOfSlide )}, this.timeToChangeSlider).attr("data-currentSlider", this.numberOfSlide);
+            this.sliderContainer.animate({left: -( this.sliderWidth) * (this.numberOfSlide )}, this.timeToChangeSlider).attr("data-currentSlider", this.numberOfSlide);
         }
     }
 
     nextSlider() {
         this.slideNext.on("click", (e) => {
             e.preventDefault();
-            let sign = +1;
-            this.changeSlider(sign);
+            const sign = +1;
+            this.changeSlider(sign, "next");
         })
     }
 
     prevSlider() {
         this.slidePrev.on("click", (e) => {
             e.preventDefault();
-            let sign = -1;
-            this.changeSlider(sign);
+            const sign = -1;
+            this.changeSlider(sign, "prev");
         })
     }
 
     animationOfLastSlide(numberOfSlide) {
-        let promise = new Promise((resolve, reject) => {
-            const lastSlide = this.sliderSlider.first().clone();
-            this.sliderContainer.append(lastSlide).animate({left: "-" + ( this.sliderWidth) * (this.numberOfSlide + 1 )}, this.timeToChangeSlider);
-            resolve(lastSlide);
-        });
-        promise.then(
-            (lastSlide) => {
-                this.sliderContainer.animate({left: 0}, 0).attr("data-currentSlider", this.numberOfSlide = numberOfSlide);
-                 setTimeout(() => {  lastSlide.remove() },  this.timeToChangeSlider );
-            }, () => {
-            }
-        );
+        const lastSlide = this.sliderSlider.first().clone();
+        this.sliderContainer.append(lastSlide).animate({left: -( this.sliderWidth) * (this.numberOfSlide + 1 )}, this.timeToChangeSlider);
+        this.sliderContainer.animate({left: 0}, 0).attr("data-currentSlider", this.numberOfSlide = numberOfSlide);
+        setTimeout(() => {
+            lastSlide.remove()
+        }, this.timeToChangeSlider);
     }
 
     animationOfFirstSlide(numberOfSlide) {
-        let promise = new Promise((resolve, reject) => {
-            var lastSlide = this.sliderSlider.first().clone();
-            this.sliderContainer.append(this.sliderSlider.first().clone());
-            this.sliderContainer.animate({left: "-" + ( this.sliderWidth) * (this.numberOfSlide + 1 )}, this.timeToChangeSlider);
-            resolve(lastSlide);
-        });
-        promise.then(
-            (lastSlide) => {
-                this.sliderContainer.animate({left: 0}, 1).attr("data-currentSlider", this.numberOfSlide = numberOfSlide);
-                lastSlide.remove();
-            }, () => {
-            }
-        );
+        const lastSlide = this.sliderSlider.last().clone();
+        this.sliderContainer.css("left", -(this.sliderWidth * 1)).prepend(lastSlide).animate({left: 0}, this.timeToChangeSlider);
+        this.sliderContainer.animate({left: -( this.sliderWidth) * ( numberOfSlide )}, 0).attr("data-currentSlider", this.numberOfSlide = numberOfSlide);
+        setTimeout(() => {
+            lastSlide.remove()
+        }, this.timeToChangeSlider);
+
     }
 
     paginationSlider() {
@@ -187,7 +174,7 @@ $(function () {
     f.init({
         mainContainer: $("#slider"),
         sliderContainerBlock: $("#slider__containerBlock"),
-        timeToChangeSlider: 1000,
+        timeToChangeSlider: 600,
         timer: false,
         speedOfTimer: 40000
     })
