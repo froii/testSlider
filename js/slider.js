@@ -6,6 +6,7 @@ class SliderObj {
     constructor() {
 
     }
+
     variable() {
         this.sliderContainer = $("#slider__container");
         this.sliderSlider = $(".slider__slider");
@@ -33,13 +34,14 @@ class SliderObj {
         });
         this.addedSliderToBD()
     }
+
     addedSliderToBD() {
 
 
     }
 
     loaderSlider() {
-        this.sliderContainer.css("width", 100 * (this.sliderSliderLength + 1)  + "%");
+        this.sliderContainer.css("width", 100 * (this.sliderSliderLength + 1) + "%");
         this.sliderSlider.css("width", 100 / ( this.sliderSliderLength + 1 ) + "%");
 
         this.identifyImageSize()
@@ -50,65 +52,35 @@ class SliderObj {
         img.each((key, value) => {
             if (value.width < value.height) {
                 $(value).css("max-height", "100%");
-            }else{
+            } else {
                 $(value).css("max-width", "99%");
             }
         })
     }
 
 
-
-
-
-
     changeSlider(sign) {
         this.numberOfSlide = parseInt(this.sliderContainer.attr("data-currentSlider"));
-        this.sliderWidth = Math.ceil(this.sliderSlider.width() );
-        // function nextSlide() {
-        //     if (slideNow == slideCount || slideNow <= 0 || slideNow > slideCount) {
-        // }
+        this.sliderWidth = Math.ceil(this.sliderSlider.width());
 
-        if (this.numberOfSlide === this.sliderSliderLength - 1) {
+        if (this.numberOfSlide < 0) {
 
-            let promise = new Promise((resolve, reject) => {
-                let lastSlide = this.sliderSlider.first().clone();
-                lastSlide.appendTo(this.sliderContainer);
-                this.sliderContainer.animate({left: "-" + ( this.sliderWidth) * (this.numberOfSlide + 1 )}, this.timeToChangeSlider);
-                resolve(lastSlide) ;
-            });
-            promise.then(
-                (lastSlide) => {
-                    this.sliderContainer.animate({left: 0}, 0).attr("data-currentSlider",  this.numberOfSlide = 0);
-                    lastSlide.remove();
-                    } ,
-                 error => alert("Rejected: " )
-            );
-
-
-            // setTimeout(() => {
-            //     this.sliderContainer.animate({left: 0}, 0).attr("data-currentSlider",  this.numberOfSlide = 0);
-            //     lastSlide.remove();
-            // }, this.timeToChangeSlider);
-            //
+        } else if (this.numberOfSlide === this.sliderSliderLength - 1) {
+            this.animationOfLateralSlide();
 
         } else if (this.numberOfSlide < this.sliderSliderLength) {
             this.numberOfSlide = Number(this.numberOfSlide + sign);
             this.sliderContainer.animate({left: "-" + ( this.sliderWidth) * (this.numberOfSlide )}, this.timeToChangeSlider).attr("data-currentSlider", this.numberOfSlide);
-
         }
-
     }
 
-
     nextSlider() {
-
         this.slideNext.on("click", (e) => {
             e.preventDefault();
             let sign = +1;
             this.changeSlider(sign);
         })
     }
-
 
     prevSlider() {
         this.slidePrev.on("click", (e) => {
@@ -118,10 +90,22 @@ class SliderObj {
         })
     }
 
+    animationOfLateralSlide() {
 
-    firstSlide() {
-
-
+        let promise = new Promise((resolve, reject) => {
+            var lastSlide = this.sliderSlider.first().clone();
+            $(".i").append(lastSlide);
+            this.sliderContainer.append(this.sliderSlider.first().clone());
+            this.sliderContainer.animate({left: "-" + ( this.sliderWidth) * (this.numberOfSlide + 1 )}, this.timeToChangeSlider);
+            resolve(lastSlide);
+        });
+        promise.then(
+            (lastSlide) => {
+                this.sliderContainer.animate({left: 0}, 1).attr("data-currentSlider", this.numberOfSlide = 0);
+                lastSlide.remove();
+            }, () => {
+            }
+        );
     }
 
     paginationSlider() {
@@ -166,7 +150,7 @@ class SliderObj {
         this.variable();
         ({
             mainContainer: this.mainContainer = $("body"),
-            sliderContainerBlock: this.sliderContainerBlock = this.mainContainer.children(":first") ,
+            sliderContainerBlock: this.sliderContainerBlock = this.mainContainer.children(":first"),
             timeToChangeSlider: this.timeToChangeSlider = 0,
             timer: this.timerTrue = false,
             speedOfTimer: this.slideTime = 6000
@@ -183,40 +167,17 @@ class SliderObj {
         }
     }
 }
-/*
- instanceof
- .constructor*/
-// f.paginationSlider();
-
 
 $(function () {
     let f = new SliderObj();
     f.init({
         mainContainer: $("#slider"),
-        sliderContainerBlock : $("#slider__containerBlock"),
-        timeToChangeSlider: 400,
+        sliderContainerBlock: $("#slider__containerBlock"),
+        timeToChangeSlider: 1000,
         timer: false,
         speedOfTimer: 40000
     })
 });
-
-//
-// $(function () {
-//     let promise = new Promise((resolve, reject) => {
-//         let f = new SliderObj();
-//         resolve(f.init())
-//     });
-//     promise
-//         .then(
-//             result => {
-//                 let fe = new SlidInterval();
-//                 fe.timerTimeOut();
-//             },
-//             error => {
-//                 alert("bad: " + error.message)
-//             }
-//         );
-// });
 
 
 
