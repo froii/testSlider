@@ -6,7 +6,6 @@ class SliderObj {
     constructor() {
 
     }
-
     variable() {
         this.sliderContainer = $("#slider__container");
         this.sliderSlider = $(".slider__slider");
@@ -21,50 +20,76 @@ class SliderObj {
 
     }
 
-    loaderSlider() {
-        this.sliderContainer.css("width", 100 * (this.sliderSliderLength + 1) + "%");
-        this.sliderSlider.css("width", 100 / ( this.sliderSliderLength + 1 ) + "%");
-        this.sliderWidth = this.sliderSlider.width();
-    }
-
-    lenghtOfAddedImages() {
+    lengthOfAddedImages() {
         let fileImage = $("#file");
         fileImage.on("change", () => {
-            let fileImagesLenghts = fileImage.get(0).files.length;
+            let fileImagesLength = fileImage.get(0).files.length;
             let submitImages = $("#slider__submitImages");
-            if (fileImagesLenghts >= 2) {
+            if (fileImagesLength >= 2) {
                 submitImages.attr("value", "submit images");
-            } else if (fileImagesLenghts <= 1) {
+            } else if (fileImagesLength <= 1) {
                 submitImages.attr("value", "submit image");
             }
         });
+        this.addedSliderToBD()
     }
-
-
     addedSliderToBD() {
 
+
     }
+
+    loaderSlider() {
+        this.sliderContainer.css("width", 100 * (this.sliderSliderLength + 1)  + "%");
+        this.sliderSlider.css("width", 100 / ( this.sliderSliderLength + 1 ) + "%");
+
+        this.identifyImageSize()
+    }
+
+    identifyImageSize() {
+        let img = this.sliderSlider.find("img");
+        img.each((key, value) => {
+            if (value.width < value.height) {
+                $(value).css("max-height", "100%");
+            }else{
+                $(value).css("max-width", "99%");
+            }
+        })
+    }
+
+
+
+
 
 
     changeSlider(sign) {
         this.numberOfSlide = parseInt(this.sliderContainer.attr("data-currentSlider"));
-
+        this.sliderWidth = Math.ceil(this.sliderSlider.width() );
         // function nextSlide() {
         //     if (slideNow == slideCount || slideNow <= 0 || slideNow > slideCount) {
         // }
 
         if (this.numberOfSlide === this.sliderSliderLength - 1) {
-            let lastSlide = this.sliderSlider.first().clone();
-            lastSlide.appendTo(this.sliderContainer);
 
-            this.sliderContainer.animate({left: "-" + ( this.sliderWidth) * (this.numberOfSlide + 1 )}, this.timeToChangeSlider);
-
-
-                setTimeout(() => {
-                    this.sliderContainer.animate({left: 0}, 0).attr("data-currentSlider", 0);
+            let promise = new Promise((resolve, reject) => {
+                let lastSlide = this.sliderSlider.first().clone();
+                lastSlide.appendTo(this.sliderContainer);
+                this.sliderContainer.animate({left: "-" + ( this.sliderWidth) * (this.numberOfSlide + 1 )}, this.timeToChangeSlider);
+                resolve(lastSlide) ;
+            });
+            promise.then(
+                (lastSlide) => {
+                    this.sliderContainer.animate({left: 0}, 0).attr("data-currentSlider",  this.numberOfSlide = 0);
                     lastSlide.remove();
-                }, this.timeToChangeSlider);
+                    } ,
+                 error => alert("Rejected: " )
+            );
 
+
+            // setTimeout(() => {
+            //     this.sliderContainer.animate({left: 0}, 0).attr("data-currentSlider",  this.numberOfSlide = 0);
+            //     lastSlide.remove();
+            // }, this.timeToChangeSlider);
+            //
 
         } else if (this.numberOfSlide < this.sliderSliderLength) {
             this.numberOfSlide = Number(this.numberOfSlide + sign);
@@ -76,6 +101,7 @@ class SliderObj {
 
 
     nextSlider() {
+
         this.slideNext.on("click", (e) => {
             e.preventDefault();
             let sign = +1;
@@ -140,6 +166,7 @@ class SliderObj {
         this.variable();
         ({
             mainContainer: this.mainContainer = $("body"),
+            sliderContainerBlock: this.sliderContainerBlock = this.mainContainer.children(":first") ,
             timeToChangeSlider: this.timeToChangeSlider = 0,
             timer: this.timerTrue = false,
             speedOfTimer: this.slideTime = 6000
@@ -147,7 +174,7 @@ class SliderObj {
 
         this.loaderSlider();
         this.opacitySlider();
-        this.lenghtOfAddedImages();
+        this.lengthOfAddedImages();
         this.nextSlider();
         this.prevSlider();
 
@@ -166,7 +193,8 @@ $(function () {
     let f = new SliderObj();
     f.init({
         mainContainer: $("#slider"),
-        timeToChangeSlider: 1000,
+        sliderContainerBlock : $("#slider__containerBlock"),
+        timeToChangeSlider: 400,
         timer: false,
         speedOfTimer: 40000
     })

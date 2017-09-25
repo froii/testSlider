@@ -13,7 +13,6 @@
     padding:1px;
     overflow: hidden;
     width:80%;
-    background: #856841;
     height:400px;
 }
 #slider__container{
@@ -21,11 +20,22 @@
     position: relative;
 }
 .slider__slider{
-    position: relative;
     float: left;
     height: 100%;
-    background: #8839ff;
 }
+
+.slider__slider img{
+    font-size:0;
+    width:auto;
+    height:auto;
+    margin: 0 auto;
+    display: block;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+
 #slider__button, #slider__pagination{
     color: #0a00ff;
     text-align: center;
@@ -67,9 +77,10 @@
     vertical-align: super;
 }
 .slider__container--opacity{
+    z-index: 2;
     position: absolute;
     width: 100%;
-    background: #000;
+    background: rgba(48, 48, 48, 0.2);
     height:100%;
     opacity:0;
 }
