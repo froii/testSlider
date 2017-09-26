@@ -50,8 +50,8 @@ class SliderObj {
             }
         })
     }
+    //TODO:  identifyImageSize(block) иногда картинки не задаються необходимым размером....
 
-    //TODO:  identifyImageSize(block) иногда картинки не задаються необходимым размером.
     loadNextPrevButton() {
         this.footerContainer.append($('<div id="slider__button"><div id="slider__prev"></div><div id="slider__next"></div></div>'));
         this.slidePrev = $("#slider__prev");
