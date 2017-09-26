@@ -44,13 +44,14 @@ class SliderObj {
         const sliderSize = block.width() / block.height();
         img.each((key, value) => {
             if (value.width < [value.height * sliderSize]) {
-                $(value).css("max-height", "100%");
+                $(value).css("max-height", "99%");
             } else {
                 $(value).css("max-width", "99%");
             }
         })
     }
 
+    //TODO:  identifyImageSize(block) иногда картинки не задаються необходимым размером.
     loadNextPrevButton() {
         this.footerContainer.append($('<div id="slider__button"><div id="slider__prev"></div><div id="slider__next"></div></div>'));
         this.slidePrev = $("#slider__prev");
@@ -192,7 +193,6 @@ class SliderObj {
 
     //TODO: добавить изменение размера картинки и перемещение по ней с помощью мышки...если отключить прозрачность. прозрачность включать по чекбоксу.
 
-
     init(ParamOfSliderObj) {
 
         ({
@@ -247,7 +247,7 @@ $(function () {
 
         timer: false,
         timeToChangeSlider: 600,
-        speedOfTimer: 40000
+        speedOfTimer: 1000
     })
 });
 
