@@ -8,61 +8,74 @@ class SliderObj {
     }
 
     variable() {
+        this.mainContainer.prepend('<div id="slider-header"></div>');
+        this.headerContainer = $("#slider-header");
+
         this.sliderContainer = $("#slider__container");
         this.sliderSlider = $(".slider__slider");
         this.sliderSliderLength = this.sliderSlider.length;
 
-        this.slidePrev = $("#slider__prev");
-        this.slideNext = $("#slider__next");
-
-        this.opacityCircle = $(".opacity__circle");
-        this.opacityBlock = $(".opacity__block");
-        this.sliderContainerOpacity = $(".slider__container--opacity");
-
+        this.mainContainer.append('<div id="slider-footer"> </div>');
+        this.footerContainer = $("#slider-footer");
     }
 
-    lengthOfAddedImages() {
-        const fileImage = $("#file");
-        fileImage.on("change", () => {
-            let fileImagesLength = fileImage.get(0).files.length;
-            let submitImages = $("#slider__submitImages");
-            if (fileImagesLength >= 2) {
-                submitImages.attr("value", "submit images");
-            } else if (fileImagesLength <= 1) {
-                submitImages.attr("value", "submit image");
-            }
-        });
-        this.addedSliderToBD()
+    loadImages(){
+        this.headerContainer.append('<div class="slider__inputFile"><span id="clickFile" >+&nbsp;Load Photo</span> ' +
+            '<input hidden type="file" id="inputFile" name="img" accept=".jpeg, .png, .jpg" multiple>' +
+            '</div>');
+
+        $("#clickFile").on("click", ()=>{ $('#inputFile').click(); })
     }
 
-    addedSliderToBD() {
+    //TODO: привязать загруженные картинки
 
-
-    }
 
     loaderSlider() {
         this.sliderContainer.css("width", 100 * (this.sliderSliderLength + 1) + "%");
-        this.sliderSlider.css("width", 100 / ( this.sliderSliderLength + 1 ) + "%");
+        this.sliderSlider.css("width", Math.ceil(100 / ( this.sliderSliderLength + 1 ) ) + "%");
 
         this.identifyImageSize()
     }
-
     identifyImageSize() {
         let img = this.sliderSlider.find("img");
+        const sliderSize = this.sliderSlider.width() / this.sliderSlider.height();
         img.each((key, value) => {
-            if (value.width < value.height) {
+            if (value.width < [value.height * sliderSize]) {
                 $(value).css("max-height", "100%");
             } else {
                 $(value).css("max-width", "99%");
             }
         })
     }
+    //TODO: иногда размер задается не сразу
 
+    loadNextPrevButton(){
+        this.footerContainer.append( $('<div id="slider__button"><div id="slider__prev"></div><div id="slider__next"></div></div>'));
+        this.slidePrev = $("#slider__prev");
+        this.slideNext = $("#slider__next");
 
+        this.nextSlider();
+        this.prevSlider();
+    }
+    nextSlider() {
+        this.slideNext.on("click", (e) => {
+            e.preventDefault();
+            const sign = +1;
+            this.changeSlider(sign, "next");
+        })
+    }
+    prevSlider() {
+        this.slidePrev.on("click", (e) => {
+            e.preventDefault();
+            const sign = -1;
+            this.changeSlider(sign, "prev");
+        })
+    }
     changeSlider(sign, route) {
         this.sliderContainer.stop(false, true);
         this.numberOfSlide = parseInt(this.sliderContainer.attr("data-currentSlider"));
-        this.sliderWidth = Math.ceil(this.sliderSlider.width());
+        this.sliderWidth = this.sliderSlider.width();
+
 
         if (this.numberOfSlide <= 0 && route === "prev") {
             this.animationOfFirstSlide(this.sliderSliderLength - 1)
@@ -73,58 +86,48 @@ class SliderObj {
             this.sliderContainer.animate({left: -( this.sliderWidth) * (this.numberOfSlide )}, this.timeToChangeSlider).attr("data-currentSlider", this.numberOfSlide);
         }
     }
-
-    nextSlider() {
-        this.slideNext.on("click", (e) => {
-            e.preventDefault();
-            const sign = +1;
-            this.changeSlider(sign, "next");
-        })
-    }
-
-    prevSlider() {
-        this.slidePrev.on("click", (e) => {
-            e.preventDefault();
-            const sign = -1;
-            this.changeSlider(sign, "prev");
-        })
-    }
-
+    //TODO: решить проблему с мерцанием при быстром переключение между первым и последним слайдом .
     animationOfLastSlide(numberOfSlide) {
         const lastSlide = this.sliderSlider.first().clone();
-        this.sliderContainer.append(lastSlide).animate({left: -( this.sliderWidth) * (this.numberOfSlide + 1 )}, this.timeToChangeSlider);
-        this.sliderContainer.animate({left: 0}, 0).attr("data-currentSlider", this.numberOfSlide = numberOfSlide);
+        this.sliderContainer
+            .append(lastSlide)
+            .animate({left: -( this.sliderWidth) * (this.numberOfSlide + 1 )}, this.timeToChangeSlider);
+        this.sliderContainer
+            .animate({left: 0}, 0)
+            .attr("data-currentSlider", this.numberOfSlide = numberOfSlide);
+
         setTimeout(() => {
             lastSlide.remove()
         }, this.timeToChangeSlider);
     }
-
     animationOfFirstSlide(numberOfSlide) {
         const lastSlide = this.sliderSlider.last().clone();
-        this.sliderContainer.css("left", -(this.sliderWidth * 1)).prepend(lastSlide).animate({left: 0}, this.timeToChangeSlider);
-        this.sliderContainer.animate({left: -( this.sliderWidth) * ( numberOfSlide )}, 0).attr("data-currentSlider", this.numberOfSlide = numberOfSlide);
+        this.sliderContainer
+            .css("left", -(this.sliderWidth * 1))
+            .prepend(lastSlide)
+            .animate({left: 0}, this.timeToChangeSlider);
+        this.sliderContainer
+            .animate({left: -( this.sliderWidth) * ( numberOfSlide )}, 0)
+            .attr("data-currentSlider", this.numberOfSlide = numberOfSlide);
+
         setTimeout(() => {
             lastSlide.remove()
         }, this.timeToChangeSlider);
 
     }
 
+    //TODO: пилю пагинацию
     paginationSlider() {
-
+        this.footerContainer.append('<div id="slider__pagination"></div>');
 
     }
-
-    variableOfOpacity(e) {
-        let x = e.clientX;
-        let a = this.opacityBlock.get(0).getBoundingClientRect().left;
-        let position = x - a;
-        this.opacityCircle.css("width", position);
-        this.opacity = position / this.opacityBlock.width();
-        return position / this.opacityBlock.width();
-    }
-
 
     opacitySlider() {
+        this.footerContainer.append('<div id="slider__opacity"><div class="opacity__block"><span class="opacity__circle"></span></div></div>');
+        this.opacityCircle = $(".opacity__circle");
+        this.opacityBlock = $(".opacity__block");
+        this.sliderContainerOpacity = $(".slider__container--opacity");
+
         this.opacityBlock.on("mousemove", (e) => {
             if (e.buttons === 1) {
                 this.sliderContainerOpacity.css("opacity", this.variableOfOpacity(e));
@@ -135,6 +138,31 @@ class SliderObj {
             this.sliderContainerOpacity.css("opacity", this.opacity);
         });
     }
+    variableOfOpacity(e) {
+        let x = e.clientX;
+        let a = this.opacityBlock.get(0).getBoundingClientRect().left;
+        let position = x - a;
+        this.opacityCircle.css("width", position);
+        this.opacity = position / this.opacityBlock.width();
+        return position / this.opacityBlock.width();
+    }
+
+    changeOpacity(e) {
+        let x = e.clientX;
+        let a = this.wrapOfSlider.get(0).getBoundingClientRect().left;
+        return   x  - a;
+    }
+    moveOfOpacitySlider() {
+        this.sliderSlider.on("mousemove", (e) => {
+            if (e.buttons === 1) {
+                $(e.currentTarget).find(".slider__container--opacity").css("width", this.changeOpacity(e));
+            }
+        });
+        this.sliderSlider.on("click", (e) => {
+            $(e.currentTarget).find(".slider__container--opacity").css("width", this.changeOpacity(e));
+        });
+    }
+
 
     timerTimeOut() {
         this.slideTimer = setInterval(() => this.changeSlider(+1), this.slideTime);
@@ -147,24 +175,44 @@ class SliderObj {
         )
     }
 
+    //TODO: добавить изменение размера картинки и перемещение по ней с помощью мышки...если отключить прозрачность. прозрачность включать по чекбоксу.
+    //TODO: попробовать сделать выгрузку измененной картинки
+
     init(ParamOfSliderObj) {
-        this.variable();
+
         ({
             mainContainer: this.mainContainer = $("body"),
-            sliderContainerBlock: this.sliderContainerBlock = this.mainContainer.children(":first"),
+            wrapOfSlider: this.wrapOfSlider = this.mainContainer.children(":first"),
+
+            loadNextPrevButtonMod : this.loadNextPrevButtonMod = true,
+            paginationMod: this.paginationMod  = false,
+            opacityMod: this.opacityMod = false,
+            addedImageMod : this.addedImageMod = false,
+
             timeToChangeSlider: this.timeToChangeSlider = 0,
-            timer: this.timerTrue = false,
+            timer: this.timerMOd = false,
             speedOfTimer: this.slideTime = 6000
+
         } = ParamOfSliderObj);
 
+        this.variable();
         this.loaderSlider();
-        this.opacitySlider();
-        this.lengthOfAddedImages();
-        this.nextSlider();
-        this.prevSlider();
 
-        if (this.timerTrue) {
+        if( this.loadNextPrevButtonMod ){
+            this.loadNextPrevButton();
+        }
+        if(this.paginationMod){
+            this.paginationSlider();
+        }
+        if( this.opacityMod ) {
+            this.opacitySlider();
+            this.moveOfOpacitySlider();
+        }
+        if (this.timerMOd ) {
             this.timerTimeOut();
+        }
+        if(this.addedImageMod){
+            this.loadImages();
         }
     }
 }
@@ -173,9 +221,14 @@ $(function () {
     let f = new SliderObj();
     f.init({
         mainContainer: $("#slider"),
-        sliderContainerBlock: $("#slider__containerBlock"),
-        timeToChangeSlider: 600,
+        wrapOfSlider: $("#wrapOfSlider"),
+
+        loadNextPrevButtonMod : true,
+        paginationMod: true,
+        opacityMod:true,
+        addedImageMod: true,
         timer: false,
+        timeToChangeSlider: 600,
         speedOfTimer: 40000
     })
 });
