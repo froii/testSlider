@@ -72,10 +72,10 @@
 
 
 /* footer slider block */
-/* style of next prev button */
 #slider__button, #slider__pagination {
     color: #0a00ff;
     text-align: center;
+
 }
 
 #slider__button > *, #slider__pagination > * {
@@ -86,12 +86,21 @@
     border-radius: 6px;
 }
 
+/* style of next prev button */
+#slider__button{
+    background: #434651;
+    height: 40px;
+}
+#slider__prev, #slider__next {
+    margin:8px;
+}
+
 #slider__prev:after {
-    content: "<-";
+    content: "<- Prev";
 }
 
 #slider__next:after {
-    content: "->";
+    content: "Next ->";
 }
 
 #slider__button > *:hover, #slider__pagination > *:hover {
@@ -133,6 +142,7 @@
     height: 100%;
     box-sizing: border-box;
     border-right: 5px solid yellow;
+    padding: 1px;
 }
 
 .slider__container--opacity {
@@ -140,4 +150,16 @@
     height: 100%;
 }
 /* end  block of opacity style */
+
+/* pagination block */
+.slider__pagination{
+    height:200px;
+}
+.paginationImageBlock{
+    height:100px;
+    width: 200px;
+}
+/* end  pagination block */
+
+
 /* end  footer slider block */

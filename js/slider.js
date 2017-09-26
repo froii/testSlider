@@ -15,30 +15,33 @@ class SliderObj {
         this.sliderSlider = $(".slider__slider");
         this.sliderSliderLength = this.sliderSlider.length;
 
+
         this.mainContainer.append('<div id="slider-footer"> </div>');
         this.footerContainer = $("#slider-footer");
     }
 
-    loadImages(){
-        this.headerContainer.append('<div class="slider__inputFile"><span id="clickFile" >+&nbsp;Load Photo</span> ' +
+    loadImages() {
+        this.headerContainer.append('<div class="slider__inputFile"><span id="clickFile">' + this.textOfInputFile + '</span>' +
             '<input hidden type="file" id="inputFile" name="img" accept=".jpeg, .png, .jpg" multiple>' +
             '</div>');
 
-        $("#clickFile").on("click", ()=>{ $('#inputFile').click(); })
+        $("#clickFile").on("click", () => {
+            $('#inputFile').click();
+        })
     }
 
     //TODO: привязать загруженные картинки
 
-
     loaderSlider() {
         this.sliderContainer.css("width", 100 * (this.sliderSliderLength + 1) + "%");
-        this.sliderSlider.css("width", Math.ceil(100 / ( this.sliderSliderLength + 1 ) ) + "%");
+        this.sliderSlider.css("width", 100 / ( this.sliderSliderLength + 1 ) + "%");
 
-        this.identifyImageSize()
+        this.identifyImageSize(this.sliderSlider);
     }
-    identifyImageSize() {
-        let img = this.sliderSlider.find("img");
-        const sliderSize = this.sliderSlider.width() / this.sliderSlider.height();
+
+    identifyImageSize(block) {
+        let img = block.find("img");
+        const sliderSize = block.width() / block.height();
         img.each((key, value) => {
             if (value.width < [value.height * sliderSize]) {
                 $(value).css("max-height", "100%");
@@ -47,16 +50,16 @@ class SliderObj {
             }
         })
     }
-    //TODO: иногда размер задается не сразу
 
-    loadNextPrevButton(){
-        this.footerContainer.append( $('<div id="slider__button"><div id="slider__prev"></div><div id="slider__next"></div></div>'));
+    loadNextPrevButton() {
+        this.footerContainer.append($('<div id="slider__button"><div id="slider__prev"></div><div id="slider__next"></div></div>'));
         this.slidePrev = $("#slider__prev");
         this.slideNext = $("#slider__next");
 
         this.nextSlider();
         this.prevSlider();
     }
+
     nextSlider() {
         this.slideNext.on("click", (e) => {
             e.preventDefault();
@@ -71,9 +74,9 @@ class SliderObj {
             this.changeSlider(sign, "prev");
         })
     }
-    changeSlider(sign, route) {
+    changeSlider(sign, route, numberOfImage = false) {
         this.sliderContainer.stop(false, true);
-        this.numberOfSlide = parseInt(this.sliderContainer.attr("data-currentSlider"));
+        this.numberOfSlide = numberOfImage ? numberOfImage : parseInt(this.sliderContainer.attr("data-currentSlider"));
         this.sliderWidth = this.sliderSlider.width();
 
 
@@ -82,10 +85,12 @@ class SliderObj {
         } else if (this.numberOfSlide === this.sliderSliderLength - 1 && route === "next") {
             this.animationOfLastSlide(0);
         } else if (this.numberOfSlide < this.sliderSliderLength) {
-            this.numberOfSlide = Number(this.numberOfSlide + sign);
+            this.numberOfSlide = Number(this.numberOfSlide) + sign;
+            console.log( this.numberOfSlide);
             this.sliderContainer.animate({left: -( this.sliderWidth) * (this.numberOfSlide )}, this.timeToChangeSlider).attr("data-currentSlider", this.numberOfSlide);
         }
     }
+
     //TODO: решить проблему с мерцанием при быстром переключение между первым и последним слайдом .
     animationOfLastSlide(numberOfSlide) {
         const lastSlide = this.sliderSlider.first().clone();
@@ -97,9 +102,10 @@ class SliderObj {
             .attr("data-currentSlider", this.numberOfSlide = numberOfSlide);
 
         setTimeout(() => {
-            lastSlide.remove()
+            // lastSlide.remove();
         }, this.timeToChangeSlider);
     }
+
     animationOfFirstSlide(numberOfSlide) {
         const lastSlide = this.sliderSlider.last().clone();
         this.sliderContainer
@@ -111,14 +117,8 @@ class SliderObj {
             .attr("data-currentSlider", this.numberOfSlide = numberOfSlide);
 
         setTimeout(() => {
-            lastSlide.remove()
+            lastSlide.remove();
         }, this.timeToChangeSlider);
-
-    }
-
-    //TODO: пилю пагинацию
-    paginationSlider() {
-        this.footerContainer.append('<div id="slider__pagination"></div>');
 
     }
 
@@ -146,11 +146,10 @@ class SliderObj {
         this.opacity = position / this.opacityBlock.width();
         return position / this.opacityBlock.width();
     }
-
     changeOpacity(e) {
         let x = e.clientX;
         let a = this.wrapOfSlider.get(0).getBoundingClientRect().left;
-        return   x  - a;
+        return x - a;
     }
     moveOfOpacitySlider() {
         this.sliderSlider.on("mousemove", (e) => {
@@ -163,6 +162,22 @@ class SliderObj {
         });
     }
 
+    paginationSlider() {
+        this.footerContainer.append('<div id="slider__pagination"></div>');
+        let pagination = $("#slider__pagination");
+        this.sliderSlider.each((key, value) => {
+            let imageToPagination = $(value).find("img").clone();
+            let blockForPagination = $("<div/>", {"class": "paginationImageBlock", 'data-pagination': key}).html(imageToPagination);
+            pagination.append(blockForPagination);
+        });
+        this.paginationSliderAction();
+    }
+    paginationSliderAction(){
+        $(".paginationImageBlock").on("click" , (e) => {
+            let numberOfImage = $(e.currentTarget).attr("data-pagination");
+            this.changeSlider( 0, "next", numberOfImage)
+        })
+    }
 
     timerTimeOut() {
         this.slideTimer = setInterval(() => this.changeSlider(+1), this.slideTime);
@@ -176,7 +191,7 @@ class SliderObj {
     }
 
     //TODO: добавить изменение размера картинки и перемещение по ней с помощью мышки...если отключить прозрачность. прозрачность включать по чекбоксу.
-    //TODO: попробовать сделать выгрузку измененной картинки
+
 
     init(ParamOfSliderObj) {
 
@@ -184,10 +199,11 @@ class SliderObj {
             mainContainer: this.mainContainer = $("body"),
             wrapOfSlider: this.wrapOfSlider = this.mainContainer.children(":first"),
 
-            loadNextPrevButtonMod : this.loadNextPrevButtonMod = true,
-            paginationMod: this.paginationMod  = false,
+            loadNextPrevButtonMod: this.loadNextPrevButtonMod = true,
+            paginationMod: this.paginationMod = false,
             opacityMod: this.opacityMod = false,
-            addedImageMod : this.addedImageMod = false,
+            addedImageMod: this.addedImageMod = false,
+            textOfInputFile : this.textOfInputFile = "+ Load Photo",
 
             timeToChangeSlider: this.timeToChangeSlider = 0,
             timer: this.timerMOd = false,
@@ -198,20 +214,20 @@ class SliderObj {
         this.variable();
         this.loaderSlider();
 
-        if( this.loadNextPrevButtonMod ){
+        if (this.loadNextPrevButtonMod) {
             this.loadNextPrevButton();
         }
-        if(this.paginationMod){
-            this.paginationSlider();
-        }
-        if( this.opacityMod ) {
+        if (this.opacityMod) {
             this.opacitySlider();
             this.moveOfOpacitySlider();
         }
-        if (this.timerMOd ) {
+        if (this.paginationMod) {
+            this.paginationSlider();
+        }
+        if (this.timerMOd) {
             this.timerTimeOut();
         }
-        if(this.addedImageMod){
+        if (this.addedImageMod) {
             this.loadImages();
         }
     }
@@ -223,10 +239,12 @@ $(function () {
         mainContainer: $("#slider"),
         wrapOfSlider: $("#wrapOfSlider"),
 
-        loadNextPrevButtonMod : true,
+        loadNextPrevButtonMod: true,
         paginationMod: true,
-        opacityMod:true,
+        opacityMod: true,
         addedImageMod: true,
+        textOfInputFile: "+ Load Photo",
+
         timer: false,
         timeToChangeSlider: 600,
         speedOfTimer: 40000
