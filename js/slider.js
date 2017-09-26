@@ -181,12 +181,12 @@ class SliderObj {
     }
 
     timerTimeOut() {
-        this.slideTimer = setInterval(() => this.changeSlider(+1), this.slideTime);
+        this.slideTimer = setInterval(() => this.changeSlider(+1, "next"), this.slideTime);
         this.mainContainer.hover(() => {
                 clearInterval(this.slideTimer);
             },
             () => {
-                this.slideTimer = setInterval(() => this.changeSlider(+1), this.slideTime);
+                this.slideTimer = setInterval(() => this.changeSlider(+1, "next"), this.slideTime);
             }
         )
     }
@@ -232,26 +232,6 @@ class SliderObj {
         }
     }
 }
-
-$(function () {
-    let f = new SliderObj();
-    f.init({
-        mainContainer: $("#slider"),
-        wrapOfSlider: $("#wrapOfSlider"),
-
-        loadNextPrevButtonMod: true,
-        paginationMod: true,
-        opacityMod: true,
-        addedImageMod: true,
-        textOfInputFile: "+ Load Photo",
-
-        timer: false,
-        timeToChangeSlider: 600,
-        speedOfTimer: 1000
-    })
-});
-
-
 
 
 

@@ -7,6 +7,26 @@
     <link rel="stylesheet" href="CSS/slider.css">
     <script src="js/jquery-1.11.3.js"></script>
     <script src="js/slider.js"></script>
+    <script>
+        $(function () {
+            let f = new SliderObj();
+            f.init({
+                mainContainer: $("#slider"),
+                wrapOfSlider: $("#wrapOfSlider"),
+
+                loadNextPrevButtonMod: true,
+                paginationMod: true,
+                opacityMod: true,
+                addedImageMod: true,
+                textOfInputFile: "+ Load Photo",
+
+                timer: true,
+                timeToChangeSlider: 600,
+                speedOfTimer: 1000
+            })
+        });
+
+    </script>
 </head>
 <body>
 <div id="slider">
