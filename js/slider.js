@@ -50,7 +50,6 @@ class SliderObj {
             }
         })
     }
-    //TODO:  identifyImageSize(block) иногда картинки не задаються необходимым размером....
 
     loadNextPrevButton() {
         this.footerContainer.append($('<div id="slider__button"><div id="slider__prev"></div><div id="slider__next"></div></div>'));
@@ -68,6 +67,7 @@ class SliderObj {
             this.changeSlider(sign, "next");
         })
     }
+
     prevSlider() {
         this.slidePrev.on("click", (e) => {
             e.preventDefault();
@@ -75,6 +75,7 @@ class SliderObj {
             this.changeSlider(sign, "prev");
         })
     }
+
     changeSlider(sign, route, numberOfImage = false) {
         this.sliderContainer.stop(false, true);
         this.numberOfSlide = numberOfImage ? numberOfImage : parseInt(this.sliderContainer.attr("data-currentSlider"));
@@ -93,7 +94,7 @@ class SliderObj {
 
     //TODO: решить проблему с мерцанием при быстром переключение между первым и последним слайдом .
     animationOfLastSlide(numberOfSlide) {
-        // if( this.currentSLideTimeOut){ clearTimeout(this.currentSLideTimeOut); }
+
         const lastSlide = this.sliderSlider.first().clone();
 
         this.sliderContainer
@@ -102,14 +103,17 @@ class SliderObj {
         this.sliderContainer
             .animate({left: 0}, 0)
             .attr("data-currentSlider", this.numberOfSlide = numberOfSlide);
-
-        this.currentSLideTimeOut =   setTimeout(() => {
+        //
+        // if (this.currentSLideTimeOutFirst) {
+        //     clearTimeout(this.currentSLideTimeOutFirst);
+        // }
+        this.currentSLideTimeOutLast = setTimeout(() => {
             lastSlide.remove();
         }, this.timeToChangeSlider);
     }
 
     animationOfFirstSlide(numberOfSlide) {
-        // if( this.currentSLideTimeOut){ clearTimeout(this.currentSLideTimeOut);}
+
         const lastSlide = this.sliderSlider.last().clone();
 
         this.sliderContainer
@@ -120,7 +124,10 @@ class SliderObj {
             .animate({left: -( this.sliderWidth) * ( numberOfSlide )}, 0)
             .attr("data-currentSlider", this.numberOfSlide = numberOfSlide);
 
-      this.currentSLideTimeOut =  setTimeout(() => {
+        // if (this.currentSLideTimeOutLast) {
+        //     clearTimeout(this.currentSLideTimeOutLast);
+        // }
+        this.currentSLideTimeOutFirst = setTimeout(() => {
             lastSlide.remove();
         }, this.timeToChangeSlider);
 
@@ -142,6 +149,7 @@ class SliderObj {
             this.sliderContainerOpacity.css("opacity", this.opacity);
         });
     }
+
     variableOfOpacity(e) {
         let x = e.clientX;
         let a = this.opacityBlock.get(0).getBoundingClientRect().left;
@@ -150,11 +158,13 @@ class SliderObj {
         this.opacity = position / this.opacityBlock.width();
         return position / this.opacityBlock.width();
     }
+
     changeOpacity(e) {
         let x = e.clientX;
         let a = this.wrapOfSlider.get(0).getBoundingClientRect().left;
         return x - a;
     }
+
     moveOfOpacitySlider() {
         this.sliderSlider.on("mousemove", (e) => {
             if (e.buttons === 1) {
@@ -171,15 +181,19 @@ class SliderObj {
         let pagination = $("#slider__pagination");
         this.sliderSlider.each((key, value) => {
             let imageToPagination = $(value).find("img").clone();
-            let blockForPagination = $("<div/>", {"class": "paginationImageBlock", 'data-pagination': key}).html(imageToPagination);
+            let blockForPagination = $("<div/>", {
+                "class": "paginationImageBlock",
+                'data-pagination': key
+            }).html(imageToPagination);
             pagination.append(blockForPagination);
         });
         this.paginationSliderAction();
     }
-    paginationSliderAction(){
-        $(".paginationImageBlock").on("click" , (e) => {
+
+    paginationSliderAction() {
+        $(".paginationImageBlock").on("click", (e) => {
             let numberOfImage = $(e.currentTarget).attr("data-pagination");
-            this.changeSlider( 0, "next", numberOfImage)
+            this.changeSlider(0, "next", numberOfImage)
         })
     }
 
@@ -206,7 +220,7 @@ class SliderObj {
             paginationMod: this.paginationMod = false,
             opacityMod: this.opacityMod = false,
             addedImageMod: this.addedImageMod = false,
-            textOfInputFile : this.textOfInputFile = "+ Load Photo",
+            textOfInputFile: this.textOfInputFile = "+ Load Photo",
 
             timeToChangeSlider: this.timeToChangeSlider = 0,
             timer: this.timerMOd = false,
