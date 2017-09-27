@@ -87,14 +87,15 @@ class SliderObj {
             this.animationOfLastSlide(0);
         } else if (this.numberOfSlide < this.sliderSliderLength) {
             this.numberOfSlide = Number(this.numberOfSlide) + sign;
-            console.log( this.numberOfSlide);
             this.sliderContainer.animate({left: -( this.sliderWidth) * (this.numberOfSlide )}, this.timeToChangeSlider).attr("data-currentSlider", this.numberOfSlide);
         }
     }
 
     //TODO: решить проблему с мерцанием при быстром переключение между первым и последним слайдом .
     animationOfLastSlide(numberOfSlide) {
+        // if( this.currentSLideTimeOut){ clearTimeout(this.currentSLideTimeOut); }
         const lastSlide = this.sliderSlider.first().clone();
+
         this.sliderContainer
             .append(lastSlide)
             .animate({left: -( this.sliderWidth) * (this.numberOfSlide + 1 )}, this.timeToChangeSlider);
@@ -102,13 +103,15 @@ class SliderObj {
             .animate({left: 0}, 0)
             .attr("data-currentSlider", this.numberOfSlide = numberOfSlide);
 
-        setTimeout(() => {
-            // lastSlide.remove();
+        this.currentSLideTimeOut =   setTimeout(() => {
+            lastSlide.remove();
         }, this.timeToChangeSlider);
     }
 
     animationOfFirstSlide(numberOfSlide) {
+        // if( this.currentSLideTimeOut){ clearTimeout(this.currentSLideTimeOut);}
         const lastSlide = this.sliderSlider.last().clone();
+
         this.sliderContainer
             .css("left", -(this.sliderWidth * 1))
             .prepend(lastSlide)
@@ -117,7 +120,7 @@ class SliderObj {
             .animate({left: -( this.sliderWidth) * ( numberOfSlide )}, 0)
             .attr("data-currentSlider", this.numberOfSlide = numberOfSlide);
 
-        setTimeout(() => {
+      this.currentSLideTimeOut =  setTimeout(() => {
             lastSlide.remove();
         }, this.timeToChangeSlider);
 
