@@ -77,7 +77,7 @@ class SliderObj {
     }
 
     changeSlider(sign, route, numberOfImage = false) {
-        this.sliderContainer.stop(false, true);
+        this.sliderContainer.stop();
         this.numberOfSlide = numberOfImage ? numberOfImage : parseInt(this.sliderContainer.attr("data-currentSlider"));
         this.sliderWidth = this.sliderSlider.width();
 
@@ -87,6 +87,7 @@ class SliderObj {
         } else if (this.numberOfSlide === this.sliderSliderLength - 1 && route === "next") {
             this.animationOfLastSlide(0);
         } else if (this.numberOfSlide < this.sliderSliderLength) {
+            this.sliderContainer.stop(false, true);
             this.numberOfSlide = Number(this.numberOfSlide) + sign;
             this.sliderContainer.animate({left: -( this.sliderWidth) * (this.numberOfSlide )}, this.timeToChangeSlider).attr("data-currentSlider", this.numberOfSlide);
         }
@@ -95,40 +96,42 @@ class SliderObj {
     //TODO: решить проблему с мерцанием при быстром переключение между первым и последним слайдом .
     animationOfLastSlide(numberOfSlide) {
 
-        const lastSlide = this.sliderSlider.first().clone();
+        this.lastSlide = this.sliderSlider.first().clone();
 
         this.sliderContainer
-            .append(lastSlide)
+            .append(this.lastSlide)
             .animate({left: -( this.sliderWidth) * (this.numberOfSlide + 1 )}, this.timeToChangeSlider);
         this.sliderContainer
             .animate({left: 0}, 0)
             .attr("data-currentSlider", this.numberOfSlide = numberOfSlide);
-        //
-        // if (this.currentSLideTimeOutFirst) {
-        //     clearTimeout(this.currentSLideTimeOutFirst);
-        // }
+
+        if (this.currentSLideTimeOutFirst) {
+            clearTimeout(this.currentSLideTimeOutFirst);
+            this.firstSlide.remove();
+        }
         this.currentSLideTimeOutLast = setTimeout(() => {
-            lastSlide.remove();
+            this.lastSlide.remove();
         }, this.timeToChangeSlider);
     }
 
     animationOfFirstSlide(numberOfSlide) {
 
-        const lastSlide = this.sliderSlider.last().clone();
+        this.firstSlide = this.sliderSlider.last().clone();
 
         this.sliderContainer
             .css("left", -(this.sliderWidth * 1))
-            .prepend(lastSlide)
+            .prepend(this.firstSlide)
             .animate({left: 0}, this.timeToChangeSlider);
         this.sliderContainer
             .animate({left: -( this.sliderWidth) * ( numberOfSlide )}, 0)
             .attr("data-currentSlider", this.numberOfSlide = numberOfSlide);
 
-        // if (this.currentSLideTimeOutLast) {
-        //     clearTimeout(this.currentSLideTimeOutLast);
-        // }
+        if (this.currentSLideTimeOutLast) {
+            clearTimeout(this.currentSLideTimeOutLast);
+            this.lastSlide.remove();
+        }
         this.currentSLideTimeOutFirst = setTimeout(() => {
-            lastSlide.remove();
+            this.firstSlide.remove();
         }, this.timeToChangeSlider);
 
     }
