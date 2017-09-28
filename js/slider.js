@@ -52,7 +52,14 @@ class SliderObj {
     }
 
     loadNextPrevButton() {
-        this.footerContainer.append($('<div id="slider__button"><div id="slider__prev"></div><div id="slider__next"></div></div>'));
+        if(this.buttonNextPrevInBlock){
+            this.mainContainer.prepend('<div id="slider__prevBlock"></div>').append('<div id="slider__nextBlock"></div>')
+        }else{
+            this.footerContainer.append('<div id="slider__button"><div id="slider__prev"></div><div id="slider__next"></div></div>');
+
+        }
+        
+        
         this.slidePrev = $("#slider__prev");
         this.slideNext = $("#slider__next");
 
@@ -209,6 +216,7 @@ class SliderObj {
             wrapOfSlider: this.wrapOfSlider = this.mainContainer.children(":first"),
 
             loadNextPrevButtonMod: this.loadNextPrevButtonMod = true,
+            buttonNextPrevInBlock: this.buttonNextPrevInBlock = false,
             paginationMod: this.paginationMod = false,
             opacityMod: this.opacityMod = false,
             addedImageMod: this.addedImageMod = false,
