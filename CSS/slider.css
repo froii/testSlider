@@ -9,7 +9,7 @@
 #slider-header{
     display: block;
     height: 40px;
-    background:linear-gradient(#9b0978, #54053d) ;
+    background:linear-gradient(#9b0978, #5f0946) ;
 }
 #slider-footer{
     padding: 1px;
@@ -89,7 +89,7 @@
 #slider__nextBlock, #slider__prevBlock{
     position: absolute;
     top: 40px;
-    background: #2a2e45;
+    background: #41234c;
     width: 50px;
     height: 400px;
 }
@@ -100,7 +100,7 @@
     font-size:1.6em;
 }
 #slider__prevBlock:hover, #slider__nextBlock:hover{
-    background: #484848;
+    background: #645992;
 }
 #slider__prevBlock{
     left: 0;
