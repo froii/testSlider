@@ -62,7 +62,6 @@ class SliderObj {
 
     nextSlider() {
         this.slideNext.on("click", (e) => {
-            e.preventDefault();
             const sign = +1;
             this.changeSlider(sign, "next");
         })
@@ -70,7 +69,6 @@ class SliderObj {
 
     prevSlider() {
         this.slidePrev.on("click", (e) => {
-            e.preventDefault();
             const sign = -1;
             this.changeSlider(sign, "prev");
         })
