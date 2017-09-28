@@ -9,7 +9,7 @@
 #slider-header{
     display: block;
     height: 40px;
-    background: #00616d;
+    background:linear-gradient(#9b0978, #54053d) ;
 }
 #slider-footer{
     padding: 1px;
@@ -90,7 +90,7 @@
     position: absolute;
     top: 40px;
     background: #2a2e45;
-    width: 40px;
+    width: 50px;
     height: 400px;
 }
 #slider__prevBlock:after, #slider__nextBlock:after{

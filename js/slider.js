@@ -53,15 +53,14 @@ class SliderObj {
 
     loadNextPrevButton() {
         if(this.buttonNextPrevInBlock){
-            this.mainContainer.prepend('<div id="slider__prevBlock"></div>').append('<div id="slider__nextBlock"></div>')
+            this.mainContainer.prepend('<div id="slider__prevBlock"></div>').append('<div id="slider__nextBlock"></div>');
+            this.slidePrev = $("#slider__prevBlock");
+            this.slideNext = $("#slider__nextBlock");
         }else{
             this.footerContainer.append('<div id="slider__button"><div id="slider__prev"></div><div id="slider__next"></div></div>');
-
+            this.slidePrev = $("#slider__prev");
+            this.slideNext = $("#slider__next");
         }
-        
-        
-        this.slidePrev = $("#slider__prev");
-        this.slideNext = $("#slider__next");
 
         this.nextSlider();
         this.prevSlider();
