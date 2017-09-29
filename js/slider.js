@@ -44,9 +44,9 @@ class SliderObj {
         const sliderSize = block.width() / block.height();
         img.each((key, value) => {
             if (value.width < [value.height * sliderSize]) {
-                $(value).css("max-height", "99%");
+                $(value).css("height", "99%");
             } else {
-                $(value).css("max-width", "99%");
+                $(value).css("width", "99%");
             }
         })
     }
