@@ -38,16 +38,23 @@ class SliderObj {
 
         this.identifyImageSize(this.sliderSlider);
     }
-
+    //TODO: не могу понять причину , почему при первой загрузке проходит проверку то одна, то две картинки.. но не все.
+    //заходят то все картинки ..а значения ширины не все..
     identifyImageSize(block) {
         let img = block.find("img");
         const sliderSize = block.width() / block.height();
         img.each((key, value) => {
-            if (value.width < [value.height * sliderSize]) {
-                $(value).css("height", "99%");
-            } else {
-                $(value).css("width", "99%");
+        let val = $(value) ; /* пофиг... на жс или на жкуаери .. как не измеряешь ширину всегда в первый раз - 0 */
+
+        console.log(val); /* вегда находит...*/
+        console.log(val.width() );/* при первом вызове  - 0 */
+
+            if (val.width() < (val.height() * sliderSize)) {
+                $(val).css("height", "99%");
+            } else if (val.width() > (val.height() * sliderSize)) {
+                $(val).css("width", "99%");
             }
+            else{ $(val).css("height", "99%");}
         })
     }
 
