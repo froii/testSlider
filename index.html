@@ -6,30 +6,12 @@
     <link rel="stylesheet" href="CSS/reset.css">
     <link rel="stylesheet" href="CSS/slider.css">
     <script src="js/jquery-1.11.3.js"></script>
-    <script src="js/slider.js"></script>
-    <script>
-        $(function () {
-            let f = new SliderObj();
-            f.init({
-                mainContainer: $("#slider"),
-                wrapOfSlider: $("#wrapOfSlider"),
 
-                loadNextPrevButtonMod: true,
-                buttonNextPrevInBlock: true,
-                paginationMod: true,
-                opacityMod: true,
-                addedImageMod: true,
-                textOfInputFile: "+ Load Photo",
-
-                timeToChangeSlider: 1000,
-                timer: true,
-                speedOfTimer: 10000
-            })
-        });
-
-    </script>
 </head>
 <body>
+<h1 style="margin: 20px 100px ; padding:10px; color: red; background: darkblue; ">ПОЧЕМУ ! ПОЧЕМУ, твою мать, в первую загрузку показывает размер только одной или двух картинок!! НУ какого ?
+ЕСЛИ дело было бы в ненахждении свойств ширины то не показывало у всех .. а так только у части !! БЛЯ !!</h1>
+
 <div id="slider">
     <div id="wrapOfSlider" onmousedown="return false" onselectstart="return false">
         <div id="slider__container" data-currentSlider="0">
@@ -70,4 +52,26 @@
 
 </div>
 </body>
+<script src="js/slider.js"></script>
+<script>
+    $(function () {
+        let f = new SliderObj();
+        f.init({
+            mainContainer: $("#slider"),
+            wrapOfSlider: $("#wrapOfSlider"),
+
+            loadNextPrevButtonMod: true,
+            buttonNextPrevInBlock: true,
+            paginationMod: true,
+            opacityMod: true,
+            addedImageMod: true,
+            textOfInputFile: "+ Load Photo",
+
+            timeToChangeSlider: 1000,
+            timer: true,
+            speedOfTimer: 10000
+        })
+    });
+
+</script>
 </html>
