@@ -35,28 +35,9 @@ class SliderObj {
     loaderSlider() {
         this.sliderContainer.css("width", 100 * (this.sliderSliderLength + 1) + "%");
         this.sliderSlider.css("width", 100 / ( this.sliderSliderLength + 1 ) + "%");
-
-        this.identifyImageSize(this.sliderSlider);
     }
-    //TODO: не могу понять причину , почему при первой загрузке проходит проверку то одна, то две картинки.. но не все.
-    //заходят то все картинки ..а значения ширины не все..
-    identifyImageSize(block) {
-        let img = block.find("img");
-        const sliderSize = block.width() / block.height();
-        img.each((key, value) => {
-        let val = $(value) ; /* пофиг... на жс или на жкуаери .. как не измеряешь ширину всегда в первый раз - 0 */
 
-        console.log(val); /* вегда находит...*/
-        console.log(val.width() );/* при первом вызове  - 0 */
 
-            if (val.width() < (val.height() * sliderSize)) {
-                $(val).css("height", "99%");
-            } else if (val.width() > (val.height() * sliderSize)) {
-                $(val).css("width", "99%");
-            }
-            else{ $(val).css("height", "99%");}
-        })
-    }
 
     loadNextPrevButton() {
         if(this.buttonNextPrevInBlock){
@@ -107,7 +88,7 @@ class SliderObj {
         }
     }
 
-    //TODO: решить проблему с мерцанием при быстром переключение между первым и последним слайдом .
+
     animationOfLastSlide(numberOfSlide) {
         this.currentSlide = this.sliderSlider.first().clone();
         this.sliderContainer
@@ -150,8 +131,7 @@ class SliderObj {
             }
         });
         this.opacityBlock.on("click", (e) => {
-            this.variableOfOpacity(e);
-            this.sliderContainerOpacity.css("opacity", this.opacity);
+            this.sliderContainerOpacity.css("opacity",   this.variableOfOpacity(e));
         });
     }
 
@@ -160,7 +140,6 @@ class SliderObj {
         let a = this.opacityBlock.get(0).getBoundingClientRect().left;
         let position = x - a;
         this.opacityCircle.css("width", position);
-        this.opacity = position / this.opacityBlock.width();
         return position / this.opacityBlock.width();
     }
 
