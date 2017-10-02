@@ -52,9 +52,9 @@
 }
 
 .slider__slider img {
-
-    max-width: 100%;
-    max-height: 100%;
+    box-sizing: border-box;
+    max-width: 99%;
+    max-height: 99%;
     font-size: 0;
     margin: 0 auto;
     display: block;
@@ -77,6 +77,7 @@
 }
 
 #slider__button > *, #slider__pagination > * {
+    box-sizing: border-box;
     display: inline-block;
     margin: 2px;
     padding: 3px 6px;
@@ -177,12 +178,19 @@
 /* end  block of opacity style */
 
 /* pagination block */
-.slider__pagination{
-    height:200px;
+#slider__pagination{
+    margin:25px auto;
 }
 .paginationImageBlock{
+    box-sizing: border-box;
     height:100px;
     width: 200px;
+    line-height:100px;
+}
+.paginationImageBlock img{
+    max-height:99%;
+    max-width:99%;
+    vertical-align: middle;
 }
 /* end  pagination block */
 
