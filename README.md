@@ -1,6 +1,6 @@
 ## slider from old time
-### css js html
-and can be more . 
+### only css js html
+
 ```
 ***workLes can do this )
 ```
